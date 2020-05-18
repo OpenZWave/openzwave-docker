@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dockerfile: [alpine, debian, ubuntu, centos]
+        dockerfile: [alpine, debian, ubuntu, centos8]
 
     steps:
       - uses: actions/checkout@v2
