@@ -39,7 +39,7 @@ jobs:
           docker buildx build \
           -f Dockerfile.${{ matrix.dockerfile }} \
           --platform linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7,linux/386 \
-          -t chrisns/openzwave-docker:${{ matrix.dockerfile }} \
-          -t chrisns/openzwave-docker:${{ matrix.dockerfile }}-$(cat .git/modules/open-zwave/refs/heads/master) \
+          -t chrisns/openzwave:${{ matrix.dockerfile }} \
+          -t chrisns/openzwave:${{ matrix.dockerfile }}-sha:$(cat .git/modules/open-zwave/refs/heads/master) \
           --push \
           .
