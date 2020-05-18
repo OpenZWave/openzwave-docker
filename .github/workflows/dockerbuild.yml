@@ -16,6 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: true
 
       - name: Just build linux/amd64 on PR
         if: ${{ github.event_name == 'pull_request' }}
