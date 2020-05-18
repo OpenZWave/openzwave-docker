@@ -1,4 +1,4 @@
-FROM ubuntu:latest@sha256:a69390df0911533dd2fc552a8765481bf6a93b5d5952a9ddbe9cb64ca3479e17
+FROM ubuntu:latest@sha256:5747316366b8cc9e3021cd7286f42b2d6d81e3d743e2ab571f55bcd5df788cc8
 LABEL maintainer="chrisns"
 
 RUN apt-get update && \
