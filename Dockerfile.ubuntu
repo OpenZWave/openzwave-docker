@@ -1,0 +1,11 @@
+FROM ubuntu:latest@sha256:a69390df0911533dd2fc552a8765481bf6a93b5d5952a9ddbe9cb64ca3479e17
+LABEL maintainer="chrisns"
+
+RUN apt-get update && \
+    apt-get install -y \
+    make \
+    g++
+
+WORKDIR /openzwave
+COPY open-zwave .
+RUN make install

@@ -1,0 +1,10 @@
+FROM centos:8@sha256:85313b812ad747dd19cf18078795b576cc4ae9cd2ca2ccccd7b5c12722b2effd
+LABEL maintainer="chrisns"
+
+RUN yum install -y \
+  make \
+  gcc-c++
+
+WORKDIR /openzwave
+COPY open-zwave .
+RUN make install

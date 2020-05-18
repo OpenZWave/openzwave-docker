@@ -1,0 +1,11 @@
+FROM debian:10.4@sha256:238cf858eb81a694187750d011c7781a9f2699aabe1479ad428928160f988483
+LABEL maintainer="chrisns"
+
+RUN apt-get update && \
+    apt-get install -y \
+    make \
+    g++
+
+WORKDIR /openzwave
+COPY open-zwave .
+RUN make install

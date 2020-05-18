@@ -1,0 +1,14 @@
+FROM alpine:3.11.6@sha256:b28e271d721b3f6377cb5bae6cd4506d2736e77ef6f70ed9b0c4716da8bdf17c
+LABEL maintainer="chrisns"
+
+RUN apk --no-cache add \
+    eudev-dev \
+    coreutils \
+    linux-headers \
+    alpine-sdk \
+    python \
+    openssl
+
+WORKDIR /openzwave
+COPY open-zwave .
+RUN make install
