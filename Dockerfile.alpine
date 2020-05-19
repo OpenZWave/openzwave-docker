@@ -1,4 +1,4 @@
-FROM alpine:3.11.6@sha256:b28e271d721b3f6377cb5bae6cd4506d2736e77ef6f70ed9b0c4716da8bdf17c
+FROM alpine:3.11.6@sha256:39eda93d15866957feaee28f8fc5adb545276a64147445c64992ef69804dbf01
 LABEL maintainer="chrisns"
 
 RUN apk --no-cache add \
