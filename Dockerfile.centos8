@@ -1,4 +1,4 @@
-FROM centos:8@sha256:9e0c275e0bcb495773b10a18e499985d782810e47b4fce076422acb4bc3da3dd
+FROM centos:8.1.1911
 LABEL maintainer="chrisns"
 
 RUN yum install -y \

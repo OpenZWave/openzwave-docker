@@ -1,7 +1,7 @@
 # openzwave-docker
 
-> Always up to date openzwave base image 
- 
+> Always up to date openzwave base image
+
 - Updated nightly (thanks [@dependabot](.dependabot/config.yml))
 - Cross architecture
 - Support [centos8](./Dockerfile.centos8), [alpine](./Dockerfile.alpine), [debian](./Dockerfile.debian), [ubuntu](./Dockerfile.ubuntu)
@@ -23,8 +23,8 @@ FROM chrisns/openzwave:alpine as build
 
 FROM node:alpine
 
-COPY --from=build /root/open-zwave/libopenzwave.so* /lib/
-COPY --from=build /root/open-zwave/config /usr/local/etc/openzwave
+COPY --from=build /openzwave/libopenzwave.so* /lib/
+COPY --from=build /openzwave/config /usr/local/etc/openzwave
 COPY . /app
 
 ENV LD_LIBRARY_PATH /lib

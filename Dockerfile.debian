@@ -1,4 +1,4 @@
-FROM debian:10.4@sha256:ccc1a6320f5f0c79d48c1461438dd167c33b7c3b93713adb5f28bdb8b3cda827
+FROM debian:10.4
 LABEL maintainer="chrisns"
 
 RUN apt-get update && \
