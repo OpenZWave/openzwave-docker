@@ -33,6 +33,7 @@ jobs:
         run: |
           curl -o ozw.tar.gz http://old.openzwave.com/downloads/openzwave-${{ matrix.openzwave }}.tar.gz
           tar -xzvf ozw.tar.gz
+          rm -rf open-zwave
           mv openzwave-${{ matrix.openzwave }} open-zwave
           mkdir -p open-zwave/.git/modules/open-zwave/refs/heads
           echo ${{ matrix.openzwave }} > open-zwave/.git/modules/open-zwave/refs/heads/master
