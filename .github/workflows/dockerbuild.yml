@@ -12,12 +12,30 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        openzwave:
+          - git
+          - "1.6.1210"
+          - "1.6.1209"
+          - "1.6.1207"
         dockerfile: [alpine, debian, ubuntu, centos8]
 
     steps:
       - uses: actions/checkout@v2
+        if: ${{ matrix.openzwave == 'git'}}
         with:
           submodules: true
+
+      - uses: actions/checkout@v2
+        if: ${{ matrix.openzwave != 'git'}}
+
+      - name: Get and extract stable github
+        if: ${{ matrix.openzwave != 'git'}}
+        run: |
+          curl -o ozw.tar.gz http://old.openzwave.com/downloads/openzwave-${{ matrix.openzwave }}.tar.gz
+          tar -xzvf ozw.tar.gz
+          mv openzwave-${{ matrix.openzwave }} open-zwave
+          mkdir -p open-zwave/.git/modules/open-zwave/refs/heads
+          echo ${{ matrix.openzwave }} > open-zwave/.git/modules/open-zwave/refs/heads/master
 
       - name: Just build linux/amd64 on PR
         if: ${{ github.event_name == 'pull_request' }}
