@@ -3,6 +3,7 @@ LABEL maintainer="chrisns"
 
 RUN yum install -y \
   make \
+  git \
   gcc-c++
 
 WORKDIR /openzwave
