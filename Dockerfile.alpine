@@ -2,6 +2,7 @@ FROM alpine:3.12.0
 LABEL maintainer="chrisns"
 
 RUN apk --no-cache add \
+    git \
     eudev-dev \
     coreutils \
     linux-headers \
