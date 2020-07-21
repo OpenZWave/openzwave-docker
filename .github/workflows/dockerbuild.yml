@@ -35,8 +35,8 @@ jobs:
           tar -xzvf ozw.tar.gz
           rm -rf open-zwave
           mv openzwave-${{ matrix.openzwave }} open-zwave
-          mkdir -p open-zwave/.git/modules/open-zwave/refs/heads
-          echo ${{ matrix.openzwave }} > open-zwave/.git/modules/open-zwave/refs/heads/master
+          mkdir -p .git/modules/open-zwave/refs/heads
+          echo ${{ matrix.openzwave }} > .git/modules/open-zwave/refs/heads/master
 
       - name: Just build linux/amd64 on PR
         if: ${{ github.event_name == 'pull_request' }}
