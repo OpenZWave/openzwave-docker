@@ -13,6 +13,11 @@
 - `chrisns/openzwave:ubuntu`
 - `chrisns/openzwave:alpine`
 - in addition there is also a copy of each suffixed with `-sha:....` with the git sha from [openzwave](https://github.com/openzwave/open-zwave)
+- and also `-version` based on the tagged stable versions from [openzwave](http://old.openzwave.com/downloads/) e.g. `chrisns/openzwave:centos8-1.6.1210`
+
+### Stable builds
+
+Unfortunately stable builds aren't trackable by dependabot as best I can find, so new builds requiring managing the [workflow file](.github/workflows/dockerbuild.yml) pull requests very welcome if you see new versions before I do!
 
 ## Expected usage
 
