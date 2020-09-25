@@ -14,9 +14,9 @@ jobs:
       matrix:
         openzwave:
           - git
+          - "1.6.1280"
           - "1.6.1240"
           - "1.6.1236"
-          - "1.6.1232"
         dockerfile: [alpine, debian, ubuntu, centos8]
 
     steps:
