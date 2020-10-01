@@ -64,7 +64,7 @@ jobs:
           docker build -f Dockerfile.${{ matrix.dockerfile }} .
 
       - name: Login to dockerhub
-        if: ${{ steps.should.outputs.build == 'true' github.event_name != 'pull_request' }}
+        if: ${{ steps.should.outputs.build == 'true' && github.event_name != 'pull_request' }}
         run: |
           docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         env:
@@ -72,7 +72,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - uses: crazy-max/ghaction-docker-buildx@v1
-        if: ${{ steps.should.outputs.build == 'true' github.event_name != 'pull_request' }}
+        if: ${{ steps.should.outputs.build == 'true' && github.event_name != 'pull_request' }}
 
       - name: build+push
         if: ${{ steps.should.outputs.build == 'true' && github.ref == 'refs/heads/master'}}
