@@ -36,11 +36,11 @@ jobs:
       matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
     steps:
       - name: Set tag
-        run: echo ::set-env name=BUILD_TAG::{{ matrix.dockerfile }}-{{ matrix.openzwave }}
+        run: echo ::set-env name=BUILD_TAG::${{ matrix.dockerfile }}-${{ matrix.openzwave }}
       - name: Check existing
         id: should
-        run: echo "::set-output name=build::{{ !contains( env.BUILD_TAG , needs.matrix.outputs.tags) }}"
-      - name: Should build {{ steps.should.outputs.build }}
+        run: echo "::set-output name=build::${{ !contains( env.BUILD_TAG , needs.matrix.outputs.tags) }}"
+      - name: Should build ${{ steps.should.outputs.build }}
         run: echo "Should build"
       - uses: actions/checkout@v2
         if: ${{ steps.should.outputs.build && matrix.openzwave == 'git'}}
