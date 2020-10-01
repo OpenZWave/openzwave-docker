@@ -22,8 +22,8 @@ jobs:
         VERSION2=$(cat downloads.html | ./pup '#pagecontent > table:nth-child(2) > tbody > tr:nth-child(3) > td:nth-child(1) text{}')
         VERSION3=$(cat downloads.html | ./pup '#pagecontent > table:nth-child(2) > tbody > tr:nth-child(4) > td:nth-child(1) text{}')
         MATRIX="{\"openzwave\":[\"git\",\"$VERSION1\",\"$VERSION2\",\"$VERSION3\"],\"dockerfile\":[\"alpine\",\"debian\",\"ubuntu\",\"centos8\"]}"
-        
-        echo "::set-output name=matrix::$MATRIX
+
+        echo "::set-output name=matrix::$MATRIX"
   build:
     runs-on: ubuntu-latest
     needs: matrix
