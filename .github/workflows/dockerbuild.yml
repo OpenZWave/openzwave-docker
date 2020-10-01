@@ -34,18 +34,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
-    if: ${{ !contains(matrix.dockerfile + '-'  + matrix.openzwave, needs.matrix.outputs.tags) }}
     steps:
+      - name: Set tag
+        run: echo ::set-env name=BUILD_TAG::${{ matrix.dockerfile }}-{{ matrix.openzwave }}
+      - name: Check existing
+        id: should
+        run: echo "::set-output name=build::{{ !contains( env.BUILD_TAG , needs.matrix.outputs.tags) }}
       - uses: actions/checkout@v2
-        if: ${{ matrix.openzwave == 'git'}}
+        if: ${{ steps.should.outputs.build && matrix.openzwave == 'git'}}
         with:
           submodules: true
 
       - uses: actions/checkout@v2
-        if: ${{ matrix.openzwave != 'git'}}
+        if: ${{ steps.should.outputs.build && matrix.openzwave != 'git'}}
 
       - name: Get and extract stable github
-        if: ${{ matrix.openzwave != 'git'}}
+        if: ${{ steps.should.outputs.build && matrix.openzwave != 'git'}}
         run: |
           curl -o ozw.tar.gz http://old.openzwave.com/downloads/openzwave-${{ matrix.openzwave }}.tar.gz
           tar -xzvf ozw.tar.gz
@@ -55,12 +59,12 @@ jobs:
           echo ${{ matrix.openzwave }} > .git/modules/open-zwave/refs/heads/master
 
       - name: Just build linux/amd64 on PR
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ steps.should.outputs.build && github.event_name == 'pull_request' }}
         run: |
           docker build -f Dockerfile.${{ matrix.dockerfile }} .
 
       - name: Login to dockerhub
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.should.outputs.build && github.event_name != 'pull_request' }}
         run: |
           docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         env:
@@ -68,10 +72,10 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - uses: crazy-max/ghaction-docker-buildx@v1
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.should.outputs.build && github.event_name != 'pull_request' }}
 
       - name: build+push
-        if: ${{ github.ref == 'refs/heads/master'}}
+        if: ${{ steps.should.outputs.build && github.ref == 'refs/heads/master'}}
         run: |
           docker buildx build \
           -f Dockerfile.${{ matrix.dockerfile }} \
