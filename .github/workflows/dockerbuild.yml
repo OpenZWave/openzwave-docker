@@ -39,7 +39,7 @@ jobs:
         run: echo ::set-env name=BUILD_TAG::${{ matrix.dockerfile }}-${{ matrix.openzwave }}
       - name: Check existing
         id: should
-        run: echo "::set-output name=build::${{ !contains( env.BUILD_TAG , needs.matrix.outputs.tags) }}"
+        run: echo "::set-output name=build::${{ !contains( env.BUILD_TAG , needs.matrix.outputs.tags) ||  matrix.openzwave == 'git' }}"
       - uses: actions/checkout@v2
         if: ${{ matrix.openzwave == 'git'}}
         with:
@@ -59,12 +59,12 @@ jobs:
           echo ${{ matrix.openzwave }} > .git/modules/open-zwave/refs/heads/master
 
       - name: Just build linux/amd64 on PR
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ steps.should.outputs.build == 'true' && github.event_name == 'pull_request' }}
         run: |
           docker build -f Dockerfile.${{ matrix.dockerfile }} .
 
       - name: Login to dockerhub
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.should.outputs.build == 'true' github.event_name != 'pull_request' }}
         run: |
           docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         env:
@@ -72,7 +72,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - uses: crazy-max/ghaction-docker-buildx@v1
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.should.outputs.build == 'true' github.event_name != 'pull_request' }}
 
       - name: build+push
         if: ${{ steps.should.outputs.build == 'true' && github.ref == 'refs/heads/master'}}
