@@ -40,7 +40,8 @@ jobs:
       - name: Check existing
         id: should
         run: echo "::set-output name=build::{{ !contains( env.BUILD_TAG , needs.matrix.outputs.tags) }}"
-      - name: Should build {{ steps.should.outputs.build }}
+      - name: Should build
+        run: echo {{ steps.should.outputs.build }}
       - uses: actions/checkout@v2
         if: ${{ steps.should.outputs.build && matrix.openzwave == 'git'}}
         with:
