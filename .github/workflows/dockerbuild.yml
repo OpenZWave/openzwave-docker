@@ -25,7 +25,7 @@ jobs:
         VERSION2=$(cat downloads.html | ./pup '#pagecontent > table:nth-child(2) > tbody > tr:nth-child(3) > td:nth-child(1) text{}')
         VERSION3=$(cat downloads.html | ./pup '#pagecontent > table:nth-child(2) > tbody > tr:nth-child(4) > td:nth-child(1) text{}')
         MATRIX="{\"openzwave\":[\"git\",\"$VERSION1\",\"$VERSION2\",\"$VERSION3\"],\"dockerfile\":[\"alpine\",\"debian\",\"ubuntu\",\"centos8\"]}"
-        TAGS=$(wget -q https://registry.hub.docker.com/v1/repositories/chrisns/openzwave/tags -O -  | sed -e 's/[][]//g' -e 's/"//g' -e 's/ //g' | tr '}' '\n'  | awk -F: '{print $3}')
+        TAGS=$(wget -q https://registry.hub.docker.com/v1/repositories/chrisns/openzwave/tags -O -)
         echo "::set-output name=matrix::$MATRIX"
         echo "::set-output name=tags::$TAGS"
   build:
@@ -39,7 +39,7 @@ jobs:
         run: echo '::set-env name=BUILD_TAG::${{ matrix.dockerfile }}-${{ matrix.openzwave }}'
       - name: Check existing
         id: should
-        run: echo "::set-output name=build::${{ !contains(needs.matrix.outputs.tags , env.BUILD_TAG) }}"
+        run: echo "::set-output name=build::${{ !contains(fromJson(needs.matrix.outputs.tags) , env.BUILD_TAG) }}"
       - uses: actions/checkout@v2
         if: ${{ matrix.openzwave == 'git'}}
         with:
