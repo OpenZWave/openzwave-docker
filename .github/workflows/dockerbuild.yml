@@ -39,7 +39,7 @@ jobs:
         run: echo '::set-env name=BUILD_TAG::${{ matrix.dockerfile }}-${{ matrix.openzwave }}'
       - name: Check existing
         id: should
-        run: echo "::set-output name=build::${{ !contains(fromJson(needs.matrix.outputs.tags) , env.BUILD_TAG) }}"
+        run: echo "::set-output name=build::${{ !contains(fromJson(needs.matrix.outputs.tags).*.name , env.BUILD_TAG) }}"
       - uses: actions/checkout@v2
         if: ${{ matrix.openzwave == 'git'}}
         with:
