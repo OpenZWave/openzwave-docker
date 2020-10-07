@@ -42,12 +42,9 @@ jobs:
         run: echo "::set-output name=build::${{ matrix.openzwave == 'git' || !contains(fromJson(needs.matrix.outputs.tags).*.name , env.BUILD_TAG) }}"
 
       - uses: actions/checkout@v2
-        if: ${{ matrix.openzwave == 'git'}}
+        if: ${{ steps.should.outputs.build == 'true' }}
         with:
-          submodules: true
-
-      - uses: actions/checkout@v2
-        if: ${{ steps.should.outputs.build == 'true' && matrix.openzwave != 'git'}}
+          submodules: ${{ matrix.openzwave != 'git' }}
 
       - name: Determine supported build platforms
         if: ${{ steps.should.outputs.build == 'true' }}
