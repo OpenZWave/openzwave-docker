@@ -59,8 +59,8 @@ jobs:
 
       - name: Setup some environment variables
         if: ${{ steps.should.outputs.build == 'true' }}
-        run: |
-          echo BUILDPLATFORM=$(cat SupportedArch.${{ matrix.dockerfile }}) >> $GITHUB_ENV
+        run: |        
+          echo BUILDPLATFORM=$([ "$GITHUB_REF" == "refs/heads/master" ] && echo $(cat SupportedArch.${{ matrix.dockerfile }}) || echo "linux/amd64") >> $GITHUB_ENV
           echo OZW_VERSION=$(cat .git/modules/open-zwave/refs/heads/master) >> $GITHUB_ENV
 
       - name: Determine ozw version
