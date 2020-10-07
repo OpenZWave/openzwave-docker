@@ -52,7 +52,7 @@ jobs:
       - name: Determine supported build platforms
         if: ${{ steps.should.outputs.build == 'true' }}
         id: buildplatform
-        run: echo ::set-env name=buildplatform::$(cat SupportedArch.${{ matrix.dockerfile }})
+        run: echo ::set-output name=buildplatform::$(cat SupportedArch.${{ matrix.dockerfile }})
 
       - name: Get and extract stable ozw
         if: ${{ steps.should.outputs.build == 'true' && matrix.openzwave != 'git'}}
@@ -67,7 +67,7 @@ jobs:
       - name: Determine ozw version
         if: ${{ steps.should.outputs.build == 'true' }}
         id: ozw
-        run: echo ::set-env name=buildplatform::$(cat git/modules/open-zwave/refs/heads/master})
+        run: echo ::set-output name=version::$(cat git/modules/open-zwave/refs/heads/master})
 
       - name: Login to dockerhub
         if: ${{ steps.should.outputs.build == 'true' && github.event_name != 'pull_request' }}
@@ -88,4 +88,4 @@ jobs:
           push: ${{ github.ref == 'refs/heads/master' }}
           tags: |
             chrisns/openzwave:${{ matrix.dockerfile }}-${{ matrix.openzwave }}
-            chrisns/openzwave:${{ matrix.dockerfile }}-sha-${{ steps.buildplatform.outputs.buildplatform }}
+            chrisns/openzwave:${{ matrix.dockerfile }}-sha-${{ steps.ozw.outputs.version }}
