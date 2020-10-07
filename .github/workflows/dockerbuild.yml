@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@v2
         if: ${{ steps.should.outputs.build == 'true' && matrix.openzwave != 'git'}}
 
-      - name: Get and extract stable github
+      - name: Get and extract stable ozw
         if: ${{ steps.should.outputs.build == 'true' && matrix.openzwave != 'git'}}
         run: |
           curl -o ozw.tar.gz http://old.openzwave.com/downloads/openzwave-${{ matrix.openzwave }}.tar.gz
@@ -60,13 +60,13 @@ jobs:
 
       - name: Just build linux/amd64 on PR
         if: ${{ steps.should.outputs.build == 'true' && github.event_name == 'pull_request' }}
-        run: |
-          docker build -f Dockerfile.${{ matrix.dockerfile }} .
+        uses: docker/build-push-action@v2
+        with:
+          file: Dockerfile.${{ matrix.dockerfile }}
 
       - name: Login to dockerhub
         if: ${{ steps.should.outputs.build == 'true' && github.event_name != 'pull_request' }}
-        run: |
-          docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        uses: docker/login-action@v1
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
