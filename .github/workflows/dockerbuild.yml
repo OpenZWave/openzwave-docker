@@ -63,11 +63,6 @@ jobs:
           echo BUILDPLATFORM=$([ "$GITHUB_REF" == "refs/heads/master" ] && echo $(cat SupportedArch.${{ matrix.dockerfile }}) || echo "linux/amd64") >> $GITHUB_ENV
           echo OZW_VERSION=$(cat .git/modules/open-zwave/refs/heads/master) >> $GITHUB_ENV
 
-      - name: Determine ozw version
-        if: ${{ steps.should.outputs.build == 'true' }}
-        id: ozw
-        run: echo ::set-output name=version::$(cat .git/modules/open-zwave/refs/heads/master)
-
       - name: Login to dockerhub
         if: ${{ steps.should.outputs.build == 'true' && github.event_name != 'pull_request' }}
         uses: docker/login-action@v1
