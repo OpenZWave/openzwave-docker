@@ -49,7 +49,9 @@ jobs:
       - name: Determine supported build platforms
         if: ${{ steps.should.outputs.build == 'true' }}
         id: buildplatform
-        run: echo ::set-output name=buildplatform::$(cat SupportedArch.${{ matrix.dockerfile }})
+        run: |
+          echo BUILDPLATFORM=$(cat SupportedArch.${{ matrix.dockerfile }}) >> $GITHUB_ENV
+          echo ::set-output name=buildplatform::$(cat SupportedArch.${{ matrix.dockerfile }})
 
       - name: Get and extract stable ozw
         if: ${{ steps.should.outputs.build == 'true' && matrix.openzwave != 'git'}}
@@ -85,7 +87,7 @@ jobs:
         with:
           file: Dockerfile.${{ matrix.dockerfile }}
           cache-from: type=registry,ref=chrisns/openzwave:${{ matrix.dockerfile }}-sha-${{ steps.ozw.outputs.version }}
-          platforms: ${{ steps.buildplatform.outputs.buildplatform }}
+          platforms: ${{ env.BUILDPLATFORM }}
           push: ${{ github.ref == 'refs/heads/master' }}
           tags: |
             chrisns/openzwave:${{ matrix.dockerfile }}-${{ matrix.openzwave }}
