@@ -36,7 +36,7 @@ jobs:
       matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
     steps:
       - name: Set tag
-        run: echo '::set-env name=BUILD_TAG::${{ matrix.dockerfile }}-${{ matrix.openzwave }}'
+        run: echo "BUILD_TAG=${{ matrix.dockerfile }}-${{ matrix.openzwave }}" >> $GITHUB_ENV
       - name: Check existing
         id: should
         run: echo "::set-output name=build::${{ matrix.openzwave == 'git' || !contains(fromJson(needs.matrix.outputs.tags).*.name , env.BUILD_TAG) }}"
@@ -71,7 +71,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-      - uses: crazy-max/ghaction-docker-buildx@v1
+      - uses: docker/setup-buildx-action@v1
         if: ${{ steps.should.outputs.build == 'true' && github.event_name != 'pull_request' }}
 
       - name: build+push
