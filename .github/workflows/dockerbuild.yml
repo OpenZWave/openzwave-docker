@@ -40,6 +40,7 @@ jobs:
       - name: Check existing
         id: should
         run: echo "::set-output name=build::${{ matrix.openzwave == 'git' || !contains(fromJson(needs.matrix.outputs.tags).*.name , env.BUILD_TAG) }}"
+
       - uses: actions/checkout@v2
         if: ${{ matrix.openzwave == 'git'}}
         with:
@@ -47,6 +48,11 @@ jobs:
 
       - uses: actions/checkout@v2
         if: ${{ steps.should.outputs.build == 'true' && matrix.openzwave != 'git'}}
+
+      - name: Determine supported build platforms
+        if: ${{ steps.should.outputs.build == 'true' }}
+        id: buildplatform
+        run: echo ::set-env name=buildplatform::$(cat SupportedArch.${{ matrix.dockerfile }})
 
       - name: Get and extract stable ozw
         if: ${{ steps.should.outputs.build == 'true' && matrix.openzwave != 'git'}}
@@ -58,11 +64,10 @@ jobs:
           mkdir -p .git/modules/open-zwave/refs/heads
           echo ${{ matrix.openzwave }} > .git/modules/open-zwave/refs/heads/master
 
-      - name: Just build linux/amd64 on PR
-        if: ${{ steps.should.outputs.build == 'true' && github.event_name == 'pull_request' }}
-        uses: docker/build-push-action@v2
-        with:
-          file: Dockerfile.${{ matrix.dockerfile }}
+      - name: Determine ozw version
+        if: ${{ steps.should.outputs.build == 'true' }}
+        id: ozw
+        run: echo ::set-env name=buildplatform::$(cat git/modules/open-zwave/refs/heads/master})
 
       - name: Login to dockerhub
         if: ${{ steps.should.outputs.build == 'true' && github.event_name != 'pull_request' }}
@@ -72,15 +77,15 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - uses: docker/setup-buildx-action@v1
-        if: ${{ steps.should.outputs.build == 'true' && github.event_name != 'pull_request' }}
+        if: ${{ steps.should.outputs.build == 'true' }}
 
       - name: build+push
-        if: ${{ steps.should.outputs.build == 'true' && github.ref == 'refs/heads/master'}}
-        run: |
-          docker buildx build \
-          -f Dockerfile.${{ matrix.dockerfile }} \
-          --platform $(cat SupportedArch.${{ matrix.dockerfile }}) \
-          -t chrisns/openzwave:${{ matrix.dockerfile }}-${{ matrix.openzwave }} \
-          -t chrisns/openzwave:${{ matrix.dockerfile }}-sha-$(cat .git/modules/open-zwave/refs/heads/master) \
-          --push \
-          .
+        if: ${{ steps.should.outputs.build == 'true' }}
+        uses: docker/build-push-action@v2
+        with:
+          file: Dockerfile.${{ matrix.dockerfile }}
+          platforms: ${{ steps.buildplatform.outputs.buildplatform }}
+          push: ${{ github.ref == 'refs/heads/master' }}
+          tags: |
+            chrisns/openzwave:${{ matrix.dockerfile }}-${{ matrix.openzwave }}
+            chrisns/openzwave:${{ matrix.dockerfile }}-sha-${{ steps.buildplatform.outputs.buildplatform }}
