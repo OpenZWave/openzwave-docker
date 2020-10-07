@@ -37,6 +37,7 @@ jobs:
     steps:
       - name: Set tag
         run: echo "BUILD_TAG=${{ matrix.dockerfile }}-${{ matrix.openzwave }}" >> $GITHUB_ENV
+
       - name: Check existing
         id: should
         run: echo "::set-output name=build::${{ matrix.openzwave == 'git' || !contains(fromJson(needs.matrix.outputs.tags).*.name , env.BUILD_TAG) }}"
@@ -45,7 +46,6 @@ jobs:
         if: ${{ steps.should.outputs.build == 'true' }}
         with:
           submodules: ${{ matrix.openzwave == 'git' }}
-
 
       - name: Get and extract stable ozw
         if: ${{ steps.should.outputs.build == 'true' && matrix.openzwave != 'git'}}
