@@ -84,6 +84,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile.${{ matrix.dockerfile }}
+          cache-from: type=registry,ref=chrisns/openzwave:${{ matrix.dockerfile }}-sha-${{ steps.ozw.outputs.version }}
           platforms: ${{ steps.buildplatform.outputs.buildplatform }}
           push: ${{ github.ref == 'refs/heads/master' }}
           tags: |
