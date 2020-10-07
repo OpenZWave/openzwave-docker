@@ -67,7 +67,7 @@ jobs:
       - name: Determine ozw version
         if: ${{ steps.should.outputs.build == 'true' }}
         id: ozw
-        run: echo ::set-output name=version::$(cat git/modules/open-zwave/refs/heads/master})
+        run: echo ::set-output name=version::$(cat .git/modules/open-zwave/refs/heads/master)
 
       - name: Login to dockerhub
         if: ${{ steps.should.outputs.build == 'true' && github.event_name != 'pull_request' }}
