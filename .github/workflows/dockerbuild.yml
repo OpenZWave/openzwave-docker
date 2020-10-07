@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@v2
         if: ${{ steps.should.outputs.build == 'true' }}
         with:
-          submodules: ${{ matrix.openzwave != 'git' }}
+          submodules: ${{ matrix.openzwave == 'git' }}
 
 
       - name: Get and extract stable ozw
