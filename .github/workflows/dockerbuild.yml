@@ -31,7 +31,7 @@ jobs:
           if [[ $EXISTING_TAGS != *"$VERSION"* ]]
           then
             echo ADDING $VERSION TO MATRIX
-            MATRIX="${MATRIX},"${VERSION}""
+            MATRIX="${MATRIX},\"${VERSION}\""
           else
             echo SKIPPING ${VERSION}
           fi
