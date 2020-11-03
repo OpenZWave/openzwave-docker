@@ -38,7 +38,7 @@ jobs:
         done
 
         MATRIX="${MATRIX}],\"dockerfile\":[\"alpine\",\"debian\",\"ubuntu\",\"centos8\"]}"
-
+        echo $MATRIX
         echo "::set-output name=matrix::$MATRIX"
 
   build:
