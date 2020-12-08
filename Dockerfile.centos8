@@ -1,4 +1,4 @@
-FROM centos:8.2.2004
+FROM centos:8.3.2011
 LABEL maintainer="chrisns"
 
 RUN yum install -y \
