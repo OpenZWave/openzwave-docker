@@ -1,4 +1,4 @@
-FROM debian:10.9
+FROM debian:10.10
 LABEL maintainer="chrisns"
 
 RUN apt-get update && \
