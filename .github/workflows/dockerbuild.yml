@@ -83,7 +83,7 @@ jobs:
       - uses: docker/setup-qemu-action@v1.2.0
 
       - name: build+push
-        uses: docker/build-push-action@v2.8.0
+        uses: docker/build-push-action@v3.0.0
         with:
           file: Dockerfile.${{ matrix.dockerfile }}
           cache-from: type=registry,ref=chrisns/openzwave:${{ matrix.dockerfile }}-sha-${{ env.OZW_VERSION }}
